@@ -73,6 +73,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         }
         mysqli_stmt_close($stmt);
+    } else {
+        echo "<script>alert('Please fill all the field correctly.');</script>";
     }
     mysqli_close($conn);
 }
