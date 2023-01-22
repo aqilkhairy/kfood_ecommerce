@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $row = mysqli_fetch_array($result);
         $_SESSION['customer'] = $username;
         $_SESSION['loggedin'] = true;
-        header("location: index.php");
+        header("location: home.php");
     } else {
         echo "<script> alert('Oops! Wrong Username & Password'); </script>";
     }
