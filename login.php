@@ -4,28 +4,34 @@ require 'fx.php';
 $username = $password = "";
 
 session_start();
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = trim($_POST["username"]);
-    $password = md5(trim($_POST["password"]));
 
-    $sql = "SELECT * FROM customer WHERE custUsername = '$username' and custPass = '$password' ";
+if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $username = trim($_POST["username"]);
+        $password = md5(trim($_POST["password"]));
 
-    $result = mysqli_query($conn, $sql);
+        $sql = "SELECT * FROM customer WHERE custUsername = '$username' and custPass = '$password' ";
 
-    if (!$result)
-        die("Database access failed: " . mysqli_connect_error());
+        $result = mysqli_query($conn, $sql);
 
-    $rows = mysqli_num_rows($result);
-    if ($rows) {
-        $row = mysqli_fetch_array($result);
-        $_SESSION['customer'] = $username;
-        $_SESSION['loggedin'] = true;
-        header("location: home.php");
-    } else {
-        echo "<script> alert('Oops! Wrong Username & Password'); </script>";
+        if (!$result)
+            die("Database access failed: " . mysqli_connect_error());
+
+        $rows = mysqli_num_rows($result);
+        if ($rows) {
+            $row = mysqli_fetch_array($result);
+            $_SESSION['username'] = $username;
+            $_SESSION['loggedin'] = true;
+            $_SESSION['userlevel'] = "user";
+            header("location: home.php");
+        } else {
+            echo "<script> alert('Oops! Wrong Username & Password'); </script>";
+        }
+
+        mysqli_close($conn);
     }
-
-    mysqli_close($conn);
+} else {
+    echo "<script> alert('You have already logged in.');  document.location.href = 'home.php'; </script>";
 }
 ?>
 

@@ -11,7 +11,7 @@ session_start();
     <?php
     include('include.php');
     ?>
-    <title>Home</title>
+    <title>Oneul Korean Food</title>
 </head>
 
 <body>
@@ -33,6 +33,7 @@ session_start();
         <div class="container">
             <h1 class="center mt-5 mb-1">Welcome to Oneul Korean Food</h1>
             <p class="center mb-5">Order and enjoy our korean food anytime, anywhere!</p>
+            <p class="center mb-5">Please login to continue.</p>
         </div>
         <!-- MAIN BODY ENDS -->
     </div>

@@ -3,80 +3,83 @@ require 'fx.php';
 
 $username = $password = $confirm_password = "";
 $username_err = $password_err = $confirm_password_err = "";
+session_start();
+if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
+        if (empty(trim($_POST["username"]))) {
+            $username_err = "Please enter a username.";
+        } else {
+            // Prepare a select statement 
+            $sql = "SELECT custUsername FROM customer WHERE custUsername = ?";
+            if ($stmt = mysqli_prepare($conn, $sql)) {
+                mysqli_stmt_bind_param($stmt, "s", $param_username);
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                $param_username = trim($_POST["username"]);
 
-    if (empty(trim($_POST["username"]))) {
-        $username_err = "Please enter a username.";
-    } else {
-        // Prepare a select statement 
-        $sql = "SELECT custUsername FROM customer WHERE custUsername = ?";
-        if ($stmt = mysqli_prepare($conn, $sql)) {
-            mysqli_stmt_bind_param($stmt, "s", $param_username);
-
-            $param_username = trim($_POST["username"]);
-
-            if (mysqli_stmt_execute($stmt)) {
-                mysqli_stmt_store_result($stmt);
-                if (mysqli_stmt_num_rows($stmt) == 1) {
-                    $username_err = "This username is already taken.";
+                if (mysqli_stmt_execute($stmt)) {
+                    mysqli_stmt_store_result($stmt);
+                    if (mysqli_stmt_num_rows($stmt) == 1) {
+                        $username_err = "This username is already taken.";
+                    } else {
+                        $username = trim($_POST["username"]);
+                    }
                 } else {
-                    $username = trim($_POST["username"]);
-                }
-            } else {
-                echo "<script> 
+                    echo "<script> 
                 alert('Oops! Something went wrong. Please try again later.');  </script>";
+                }
+            }
+            mysqli_stmt_close($stmt);
+        }
+
+        if (empty(trim($_POST["password"]))) {
+            $password_err = "Please enter a password.";
+        } elseif (strlen(trim($_POST["password"])) < 6) {
+            $password_err = "Password must have at least 6 characters.";
+        } else {
+            $password = trim($_POST["password"]);
+        }
+
+
+        if (empty(trim($_POST["password2"]))) {
+            $confirm_password_err = "Please confirm password.";
+        } else {
+            $confirm_password = trim($_POST["password2"]);
+            if (empty($password_err) && ($password != $confirm_password)) {
+                $confirm_password_err = "Password did not match.";
             }
         }
-        mysqli_stmt_close($stmt);
-    }
 
-    if (empty(trim($_POST["password"]))) {
-        $password_err = "Please enter a password.";
-    } elseif (strlen(trim($_POST["password"])) < 6) {
-        $password_err = "Password must have at least 6 characters.";
-    } else {
-        $password = trim($_POST["password"]);
-    }
+        if (empty($username_err) && empty($password_err) && empty($confirm_password_err)) {
+            $sql = "INSERT INTO customer (custUsername, custPass, custContact, custAddress) VALUES (?, ?, ?, ?) ";
+            if ($stmt = mysqli_prepare($conn, $sql)) {
+                mysqli_stmt_bind_param($stmt, "ssss", $param_username, $param_password, $param_contact, $param_address);
 
-
-    if (empty(trim($_POST["password2"]))) {
-        $confirm_password_err = "Please confirm password.";
-    } else {
-        $confirm_password = trim($_POST["password2"]);
-        if (empty($password_err) && ($password != $confirm_password)) {
-            $confirm_password_err = "Password did not match.";
-        }
-    }
-
-    if (empty($username_err) && empty($password_err) && empty($confirm_password_err)) {
-        $sql = "INSERT INTO customer (custUsername, custPass, custContact, custAddress) VALUES (?, ?, ?, ?) ";
-        if ($stmt = mysqli_prepare($conn, $sql)) {
-            mysqli_stmt_bind_param($stmt, "ssss", $param_username,  $param_password, $param_contact, $param_address );
-
-            $param_username = $_POST["username"];
-            $param_password = md5($password);
-            $param_contact = $_POST["contact"];
-            $param_address = $_POST["address"];
+                $param_username = $_POST["username"];
+                $param_password = md5($password);
+                $param_contact = $_POST["contact"];
+                $param_address = $_POST["address"];
 
 
-            if (mysqli_stmt_execute($stmt)) {
-                print('tet');
-                echo "
+                if (mysqli_stmt_execute($stmt)) {
+                    print('tet');
+                    echo "
                 <script> 
                     alert('Registration is successful!');
                     document.location.href = 'login.php'; 
                 </script>";
-            } else {
-                echo "<script>alert('Something went wrong. Please try again later.');</script>";
+                } else {
+                    echo "<script>alert('Something went wrong. Please try again later.');</script>";
+                }
             }
+            mysqli_stmt_close($stmt);
+        } else {
+            echo "<script>alert('Please fill all the field correctly.');</script>";
         }
-        mysqli_stmt_close($stmt);
-    } else {
-        echo "<script>alert('Please fill all the field correctly.');</script>";
+        mysqli_close($conn);
     }
-    mysqli_close($conn);
+} else {
+    echo "<script> alert('You have already logged in.'); document.location.href = 'home.php'; </script>";
 }
 
 
