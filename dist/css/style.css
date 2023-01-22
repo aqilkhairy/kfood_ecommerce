@@ -1,0 +1,28 @@
+body {
+    background-color: powderblue;
+    padding: 20px;
+}
+
+.main {
+    background-color: white;
+    border-radius: 5px;
+    border-style: groove;
+    border-color: gray;
+    position:fixed;
+    width:96%;
+    height:90%;
+    top:0px;
+    left:0px;
+    z-index:1000;
+    margin: 2%;
+}
+
+input {
+    width: 1000px;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
