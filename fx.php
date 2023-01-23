@@ -32,17 +32,16 @@ function addprod($data)
 {
     global $conn;
 
-    $name = $data["name"];
-    $type = $data["type"];
-    $quantity = $data["quantity"];
-    $price = $data["price"];
+    $name = $data["productName"];
+    $price = $data["productPrice"];
+    $stock = $data["productStock"];
 
     $imageprod = upload();
     if (!$imageprod) {
         return false;
     }
 
-    $query = "INSERT INTO product VALUES ('$name','','$type',$quantity,$price,'$imageprod')";
+    $query = "INSERT INTO product(productName, productPrice, productStock, productImage) VALUES ('$name',$price,$stock,'$imageprod')";
 
     mysqli_query($conn, $query);
 
@@ -81,7 +80,7 @@ function upload()
     $newfilename = uniqid();
     $newfilename .= '.';
     $newfilename .= $fileextension;
-    move_uploaded_file($filetmpname, '' . $newfilename);
+    move_uploaded_file($filetmpname, 'product_images/' . $newfilename);
 
     return $newfilename;
 }
@@ -90,7 +89,7 @@ function deleteprod($id)
 {
     global $conn;
 
-    mysqli_query($conn, "DELETE FROM product WHERE prod_id = $id");
+    mysqli_query($conn, "DELETE FROM product WHERE productId = $id");
 
     return mysqli_affected_rows($conn);
 }
@@ -99,11 +98,10 @@ function updateprod($data)
 {
     global $conn;
 
-    $prod_id = $data["prod_id"];
-    $name = $data["name"];
-    $type = $data["type"];
-    $quantity = $data["quantity"];
-    $price = $data["price"];
+    $prod_id = $data["productId"];
+    $name = $data["productName"];
+    $price = $data["productPrice"];
+    $stock = $data["productStock"];
     $oldimg = $data["oldimg"];
 
     if ($_FILES['imageprod']['error'] === 4) {
@@ -111,18 +109,16 @@ function updateprod($data)
     } else {
         $imageprod = upload();
     }
-
     $query = "UPDATE product SET
-                    name = '$name',
-                    type = '$type',
-                    quantity = $quantity,
-                    price = $price,
-                    imageprod = '$imageprod'
-                    WHERE prod_id = $prod_id
+                    productName = '$name',
+                    productPrice = $price,
+                    productStock = $stock,
+                    productImage = '$imageprod'
+                    WHERE productId = $prod_id
         ";
 
     mysqli_query($conn, $query);
-
+    //delete file soon
     return mysqli_affected_rows($conn);
 }
 

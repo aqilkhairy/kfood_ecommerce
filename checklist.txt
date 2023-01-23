@@ -1,0 +1,10 @@
+DONE
+- Landing Page (index.php)
+- Customer Login
+- Customer Register
+- Customer View Product List
+- Admin Login
+- Admin View Product List
+- Admin Add Product
+- Admin Edit Product
+- Admin Delete Product
