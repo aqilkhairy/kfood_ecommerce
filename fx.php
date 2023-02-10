@@ -48,6 +48,22 @@ function addprod($data)
     return mysqli_affected_rows($conn);
 }
 
+function addcart($data)
+{
+    global $conn;
+
+    $productId = $data["productId"];
+    $productQuantity = $data["productQuantity"];
+    $productNote = $data["productNote"];
+    $custId = $data["custId"];
+
+    $query = "INSERT INTO cart(productId, productQuantity, productNote, custId) VALUES ($productId, $productQuantity, '$productNote', $custId)";
+
+    mysqli_query($conn, $query);
+
+    return mysqli_affected_rows($conn);
+}
+
 function upload()
 {
     $filename = $_FILES['imageprod']['name'];

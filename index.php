@@ -20,7 +20,7 @@ session_start();
         <nav class="navbar navbar-expand-lg">
             <div class="container-fluid">
                 <h4 class="navbar-brand">Oneul Korean Food</h4>
-                <nav class="navbar">
+                <nav class="navbar navbar-right">
                     <form class="container-fluid justify-content-start">
                         <a class="btn btn-outline-dark me-2" type="button" href="register.php">Register</a>
                         <a class="btn btn-outline-dark me-2" type="button" href="login.php">Login</a>

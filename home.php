@@ -9,6 +9,30 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 } else {
     $getQuery = "SELECT * FROM product";
     $product = query($getQuery);
+    $getQuery = "SELECT * FROM cart c JOIN customer b ON (c.custId = b.custId);";
+    $mycart = query($getQuery);
+    if ($_SESSION["userlevel"] == "runner") {
+        echo "<script>document.location.href = 'runnerhome.php';</script>";
+    }
+
+    if(isset($_POST["productId"])) {
+        $_POST["custId"] = $_SESSION["custId"];
+        if (addcart($_POST) > 0) {
+            echo "
+                    <script>
+                        alert('Added to cart');
+                        document.location.href = 'home.php';
+                    </script>
+                    ";
+        } else {
+            echo "
+                    <script>
+                        alert('Something wrong');
+                        document.location.href = 'home.php';
+                    </script>
+                    ";
+        }
+    }
 }
 ?>
 
@@ -28,7 +52,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
         <nav class="navbar navbar-expand-lg">
             <div class="container-fluid">
                 <h4 class="navbar-brand">Oneul Korean Food</h4>
-                <nav class="navbar">
+                <nav class="navbar navbar-right">
                     <form class="container-fluid justify-content-start">
 
                         <p class="navbar-text">Welcome
@@ -84,10 +108,16 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                     </td>
                     <td>
                         <?php if ($_SESSION['userlevel'] == 'admin') { ?>
-                            <a href='editproduct.php?productId=<?php echo $prod["productId"]; ?>' class='btn btn-warning'>Edit</a>
-                            <a href='deleteproduct.php?productId=<?php echo $prod["productId"]; ?>' class='btn btn-danger'>Delete</a>
+                            <a href='editproduct.php?productId=<?php echo $prod["productId"]; ?>'
+                                class='btn btn-warning'>Edit</a>
+                            <a href='deleteproduct.php?productId=<?php echo $prod["productId"]; ?>'
+                                class='btn btn-danger'>Delete</a>
                         <?php } else { ?>
-                            <!-- CUSTOMER ACTION GOES HERE -->
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addToCartModal"
+                                data-productId="<?php echo $prod["productId"]; ?>"
+                                data-productName="<?php echo $prod["productName"]; ?>">
+                                Add to Cart
+                            </button>
                         <?php } ?>
                     </td>
                 </tr>
@@ -96,6 +126,41 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
         </table>
         <!-- MAIN BODY ENDS -->
     </div>
+    <!-- Modal -->
+    <div class="modal fade" id="addToCartModal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <form method="post" action="home.php">
+                    <div class="modal-body">
+                        <div class="input-group">
+                            <input type="hidden" id="productId" name="productId">
+                            <p>Amount: <input class="form-control" id="productQuantity" name="productQuantity" type="number" value="1" min="1"></p>
+                            <p>Additional Note: <textarea class="form-control" id="productNote" name="productNote"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-success">Add to Cart</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        $('#addToCartModal').on('show.bs.modal', function (e) {
+            var $modal = $(this),
+                productId = $(e.relatedTarget).data('productid');
+            productName = $(e.relatedTarget).data('productname');
+            $modal.find('.modal-title').html(productName);
+            $modal.find('#productId').val(productId);
+            console.log(productName);
+        });
+    </script>
 </body>
 
 </html>
