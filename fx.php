@@ -104,14 +104,25 @@ function updatecart($data)
     return mysqli_affected_rows($conn);
 }
 
-function modifyOrderStatus($data, $status)
+function modifyOrderStatus($orderId, $status)
 {
     global $conn;
 
-    $orderId = $data["orderId"];
-
     $query = "UPDATE order_table SET
                     orderStatus = '$status' 
+                    WHERE orderId = $orderId
+        ";
+
+    mysqli_query($conn, $query);
+    return mysqli_affected_rows($conn);
+}
+
+function chooseRunner($orderId, $runnerId)
+{
+    global $conn;
+
+    $query = "UPDATE order_table SET
+                    runnerId = $runnerId 
                     WHERE orderId = $orderId
         ";
 
@@ -161,6 +172,16 @@ function deleteprod($id)
     global $conn;
 
     mysqli_query($conn, "DELETE FROM product WHERE productId = $id");
+
+    return mysqli_affected_rows($conn);
+}
+
+function deleteOrder($id)
+{ 
+    global $conn;
+
+    mysqli_query($conn, "DELETE FROM cart WHERE orderId = $id");
+    mysqli_query($conn, "DELETE FROM order_table WHERE orderId = $id");
 
     return mysqli_affected_rows($conn);
 }
