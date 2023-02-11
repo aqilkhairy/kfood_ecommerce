@@ -20,12 +20,15 @@ function query($query)
     return $rows;
 }
 
-function getTotalRow($query)
+function changeStock($productId, $newStock)
 {
     global $conn;
 
-    $result = mysqli_query($conn, $query);
-    return mysqli_fetch_row($result);
+    $query = "UPDATE product SET productStock = $newStock WHERE productId = $productId";
+
+    mysqli_query($conn, $query);
+
+    return mysqli_affected_rows($conn);
 }
 
 function addprod($data)
@@ -114,6 +117,23 @@ function modifyOrderStatus($orderId, $status)
         ";
 
     mysqli_query($conn, $query);
+
+    if ($status == 'CANCELED') {
+        $query = "SELECT * FROM cart c JOIN customer b ON (c.custId = b.custId) JOIN product p ON (c.productId = p.productId) WHERE c.orderId = $orderId";
+        $rows = query($query);
+        foreach ($rows as $r) {
+            $productId = $r["productId"];
+            $productStock = $r["productStock"];
+            $productQuantity = $r["productQuantity"];
+            $newStock = $productStock + $productQuantity;
+            $query = "UPDATE product SET
+                    productStock = $newStock
+                    WHERE productId = $productId
+        ";
+            mysqli_query($conn, $query);
+        }
+    }
+
     return mysqli_affected_rows($conn);
 }
 
@@ -177,7 +197,7 @@ function deleteprod($id)
 }
 
 function deleteOrder($id)
-{ 
+{
     global $conn;
 
     mysqli_query($conn, "DELETE FROM cart WHERE orderId = $id");
@@ -211,77 +231,5 @@ function updateprod($data)
 
     mysqli_query($conn, $query);
     //delete file soon
-    return mysqli_affected_rows($conn);
-}
-
-function searchprod($keyword)
-{
-    $query = "SELECT * FROM product WHERE name LIKE '%$keyword%'";
-
-    return query($query);
-}
-
-function buyprod($data)
-{
-    global $conn;
-
-    $cust_name = $data["cust_name"];
-    $address = $data["address"];
-    $num_phone = $data["num_phone"];
-    $prod_id = $data["prod_id"];
-    $quantity = $data["quantitybuy"];
-    $total_price = $data["price"] * $data["quantitybuy"];
-
-    $query = "INSERT INTO sales_record VALUES ('$cust_name','','$address','$num_phone',$prod_id,$quantity,$total_price)";
-
-    mysqli_query($conn, $query);
-
-    $oldquantity = $data["quantity"];
-
-    $updatedquantity = $oldquantity - $quantity;
-
-    $query = "UPDATE product SET quantity = $updatedquantity WHERE prod_id = $prod_id";
-
-    mysqli_query($conn, $query);
-
-    return mysqli_affected_rows($conn);
-}
-
-
-function addsales($data)
-{
-    global $conn;
-    $getQuery = "SELECT * FROM product";
-    $product = mysqli_query($conn, $getQuery);
-
-    $username = $_SESSION["customer"];
-    $query2 = "INSERT INTO sales_record (username) VALUES ('$username'); ";
-    mysqli_query($conn, $query2);
-    $salesrecord_id = mysqli_insert_id($conn);
-
-    $total = 0.0;
-    $cart = $_SESSION["cart"];
-    $prod_id = array_column($cart, "idc");
-    $quantity = $_POST["quantity"];
-    $no = 0;
-    foreach ($product as $prod):
-        for ($i = 0; $i < count($prod_id); $i++) {
-            if ($prod["prod_id"] == $prod_id[$i]) {
-                $query = "INSERT INTO cart (salesrecord_id, prod_id, cart_quantity) VALUES ($salesrecord_id, $prod_id[$i], $quantity[$no]); ";
-                $minusquantity = $quantity[$no];
-
-                $total += ((float) $prod["price"] * (int) $quantity[$no]);
-                $no++;
-                mysqli_query($conn, $query);
-
-
-                $query3 = "UPDATE product SET quantity = quantity - " . $minusquantity . " WHERE prod_id = $prod_id[$i]";
-                mysqli_query($conn, $query3);
-            }
-        }
-    endforeach;
-
-    $query2 = "UPDATE sales_record SET total_price=$total WHERE salesrecord_id=$salesrecord_id;";
-    mysqli_query($conn, $query2);
     return mysqli_affected_rows($conn);
 }

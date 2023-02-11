@@ -37,6 +37,9 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
         foreach ($mycart as $cart):
             $cartArray[$i] = $cart["cartId"];
             $i++;
+
+            $newStock = $cart["productStock"]-$cart["productQuantity"];
+            changeStock($cart["productId"],$newStock);
         endforeach;
         $_POST['cartArray'] = $cartArray;
         if (addorder($_POST) > 0) {
