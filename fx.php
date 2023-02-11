@@ -64,6 +64,61 @@ function addcart($data)
     return mysqli_affected_rows($conn);
 }
 
+function addorder($data)
+{
+    global $conn;
+
+    $query = "INSERT INTO order_table(orderStatus) VALUES ('ORDER PLACED')";
+    mysqli_query($conn, $query);
+    $orderId = mysqli_insert_id($conn);
+
+    foreach ($data['cartArray'] as $d):
+        $cartId = $d;
+
+        $query = "UPDATE cart SET
+                    orderId = $orderId
+                    WHERE cartId = $cartId
+        ";
+
+        mysqli_query($conn, $query);
+    endforeach;
+
+    return mysqli_affected_rows($conn);
+}
+
+function updatecart($data)
+{
+    global $conn;
+
+    $cartId = $data["cartId"];
+    $productQuantity = $data["productQuantity"];
+    $productNote = $data["productNote"];
+
+    $query = "UPDATE cart SET
+                    productQuantity = '$productQuantity',
+                    productNote = '$productNote' 
+                    WHERE cartId = $cartId
+        ";
+
+    mysqli_query($conn, $query);
+    return mysqli_affected_rows($conn);
+}
+
+function modifyOrderStatus($data, $status)
+{
+    global $conn;
+
+    $orderId = $data["orderId"];
+
+    $query = "UPDATE order_table SET
+                    orderStatus = '$status' 
+                    WHERE orderId = $orderId
+        ";
+
+    mysqli_query($conn, $query);
+    return mysqli_affected_rows($conn);
+}
+
 function upload()
 {
     $filename = $_FILES['imageprod']['name'];

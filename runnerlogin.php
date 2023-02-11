@@ -20,10 +20,11 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
         $rows = mysqli_num_rows($result);
         if ($rows) {
             $row = mysqli_fetch_array($result);
+            $_SESSION['runnerId'] = $row['runnerId'];
             $_SESSION['username'] = $username;
             $_SESSION['loggedin'] = true;
             $_SESSION['userlevel'] = "runner";
-            header("location: home.php");
+            header("location: orderlist.php");
         } else {
             echo "<script> alert('Oops! Wrong Username & Password'); </script>";
         }
@@ -31,7 +32,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
         mysqli_close($conn);
     }
 } else {
-    echo "<script> alert('You have already logged in.');  document.location.href = 'home.php'; </script>";
+    echo "<script> alert('You have already logged in.');  document.location.href = 'orderlist.php'; </script>";
 }
 ?>
 
@@ -61,7 +62,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                 <br>
                 <button class="btn btn-outline-dark me-2" type="submit">Login</button>
                 <footer>
-                    Want to be a runner? <a href="register.php">Register here</a><br>
+                    Want to be a runner? <a href="runnerregister.php">Register here</a><br>
                     Other options: <a href="adminlogin.php">Admin Login</a> | <a href="login.php">Customer Login</a>
                 </footer>
             </form>

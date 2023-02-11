@@ -12,10 +12,10 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     $getQuery = "SELECT * FROM cart c JOIN customer b ON (c.custId = b.custId);";
     $mycart = query($getQuery);
     if ($_SESSION["userlevel"] == "runner") {
-        echo "<script>document.location.href = 'runnerhome.php';</script>";
+        echo "<script>document.location.href = 'orderlist.php';</script>";
     }
 
-    if(isset($_POST["productId"])) {
+    if (isset($_POST["productId"])) {
         $_POST["custId"] = $_SESSION["custId"];
         if (addcart($_POST) > 0) {
             echo "
@@ -48,22 +48,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 
 <body>
     <div class="main">
-        <!-- NAVBAR STARTS -->
-        <nav class="navbar navbar-expand-lg">
-            <div class="container-fluid">
-                <h4 class="navbar-brand">Oneul Korean Food</h4>
-                <nav class="navbar navbar-right">
-                    <form class="container-fluid justify-content-start">
-
-                        <p class="navbar-text">Welcome
-                            <?php echo $_SESSION['username']; ?>,
-                            <a href="logout.php">Logout</a>
-                        </p>
-                    </form>
-                </nav>
-            </div>
-        </nav>
-        <!-- NAVBAR ENDS -->
+        <?php include('navbar.php'); ?>
         <!-- MAIN BODY STARTS -->
         <div class="container">
             <?php if ($_SESSION['userlevel'] == 'admin') { ?>
@@ -139,8 +124,10 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                     <div class="modal-body">
                         <div class="input-group">
                             <input type="hidden" id="productId" name="productId">
-                            <p>Amount: <input class="form-control" id="productQuantity" name="productQuantity" type="number" value="1" min="1"></p>
-                            <p>Additional Note: <textarea class="form-control" id="productNote" name="productNote"></textarea>
+                            <p>Amount: <input class="form-control" id="productQuantity" name="productQuantity"
+                                    type="number" value="1" min="1"></p>
+                            <p>Additional Note: <textarea class="form-control" id="productNote"
+                                    name="productNote"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">

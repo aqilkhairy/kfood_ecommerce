@@ -7,10 +7,53 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     echo "<script>alert('Please login first.');  document.location.href = 'login.php'; </script>";
     exit;
 } else {
-    $getQuery = "SELECT * FROM cart c JOIN customer b ON (c.custId = b.custId) JOIN product p ON (c.productId = p.productId);";
+    $getQuery = "SELECT * FROM cart c JOIN customer b ON (c.custId = b.custId) JOIN product p ON (c.productId = p.productId) WHERE c.orderId IS NULL";
     $mycart = query($getQuery);
     if ($_SESSION["userlevel"] == "runner") {
         echo "<script>document.location.href = 'runnerhome.php';</script>";
+    }
+
+    if (isset($_POST["cartId"])) {
+        $_POST["custId"] = $_SESSION["custId"];
+        if (updatecart($_POST) > 0) {
+            echo "
+                    <script>
+                        alert('Changes saved');
+                        document.location.href = 'mycart.php';
+                    </script>
+                    ";
+        } else {
+            echo "
+                    <script>
+                        alert('Something wrong');
+                        document.location.href = 'mycart.php';
+                    </script>
+                    ";
+        }
+    }
+    if(isset($_POST["checkout"])) {
+        $i = 0;
+        $cartArray = [];
+        foreach ($mycart as $cart):
+            $cartArray[$i] = $cart["cartId"];
+            $i++;
+        endforeach;
+        $_POST['cartArray'] = $cartArray;
+        if (addorder($_POST) > 0) {
+            echo "
+                    <script>
+                        alert('Order received!');
+                        document.location.href = 'mycart.php';
+                    </script>
+                    ";
+        } else {
+            echo "
+                    <script>
+                        alert('Something wrong');
+                        document.location.href = 'mycart.php';
+                    </script>
+                    ";
+        }
     }
 }
 ?>
@@ -27,66 +70,167 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 
 <body>
     <div class="main">
-        <!-- NAVBAR STARTS -->
-        <nav class="navbar navbar-expand-lg">
-            <div class="container-fluid">
-                <h4 class="navbar-brand">Oneul Korean Food</h4>
-                <nav class="navbar">
-                    <form class="container-fluid justify-content-start">
-
-                        <p class="navbar-text">Welcome
-                            <?php echo $_SESSION['username']; ?>,
-                            <a href="logout.php">Logout</a>
-                        </p>
-                    </form>
-                </nav>
-            </div>
-        </nav>
-        <!-- NAVBAR ENDS -->
+    <?php include('navbar.php'); ?>
         <!-- MAIN BODY STARTS -->
         <div class="container">
-            <h1 class="center mt-5 mb-1">My Cart</h1>
-        </div>
-        <table class="table table-striped" id="table" align="center">
-            <thead>
-                <tr>
-                    <th>Product Image</th>
-                    <th>Product Name</th>
-                    <th>Quantity</th>
-                    <th>Total Price</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <?php
-            $totalprice = 0.0;
-            foreach ($product as $prod):
-                ?>
-                <tr>
-                    <td>
-                        <img src="product_images/<?= $mycart["productImage"]; ?>" alt="" width="100"><br>
-                    </td>
-                    <td>
-                        <?php echo $mycart["productName"], "<br>"; ?>
-                    </td>
-                    <td>
-                        <?php echo $mycart["productQuantity"], "<br>"; ?>
-                    </td>
-                    <td>
+            <div class="row">
+                <div class="col-md-7">
+                    <h1 class="center mt-5 mb-1">My Cart</h1>
+                    <table class="table table-striped" id="table" align="center">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Product Details</th>
+                                <th>Quantity</th>
+                                <th>Total Price</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
                         <?php
-                        $price = ($mycart["productQuantity"] * $mycart["productPrice"]);
-                        $totalprice += $price;
-                        echo "RM", number_format((float) $price, 2), "<br>"; 
-                        ?>
-                    </td>
-                    <td>
-                        
-                    </td>
-                </tr>
-                <?php
-            endforeach; ?>
-        </table>
+                        $totalprice = 0.0;
+                        $counter = 0;
+                        $cartArray = [];
+                        foreach ($mycart as $cart):
+                            $cartArray[$counter] = $cart["cartId"];
+                            $counter++;
+                            ?>
+                            <tr>
+                                <td>
+                                    <?php echo $counter; ?>
+                                </td>
+                                <td>
+                                    <?php echo $cart["productName"], "<br>"; ?>
+                                    <i><span style="color: gray;">"
+                                            <?php echo $cart["productNote"]; ?>"
+                                        </span></i>
+                                </td>
+                                <td>
+                                    <?php echo $cart["productQuantity"], "<br>"; ?>
+                                </td>
+                                <td>
+                                    <?php
+                                    $price = ($cart["productQuantity"] * $cart["productPrice"]);
+                                    $totalprice += $price;
+                                    echo "RM", number_format((float) $price, 2), "<br>";
+                                    ?>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-warning" data-toggle="modal"
+                                        data-target="#modifyModal" data-cartId="<?php echo $cart["cartId"]; ?>"
+                                        data-productId="<?php echo $cart["productId"]; ?>"
+                                        data-productName="<?php echo $cart["productName"]; ?>"
+                                        data-productQuantity="<?php echo $cart["productQuantity"]; ?>"
+                                        data-productNote="<?php echo $cart["productNote"]; ?>">
+                                        Modify
+                                    </button>
+                                </td>
+                            </tr>
+                            <?php
+                        endforeach; ?>
+                    </table>
+                </div>
+                <div class="col-md-5">
+                    <form method="post" action="mycart.php">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Order Summary</h3>
+                            </div>
+                            <div class="panel-body">
+                                <?php 
+                                foreach ($mycart as $cart):
+                                    ?>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <span style="color: gray;">
+                                                <?php echo $cart["productQuantity"], "x"; ?>
+                                            </span>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <?php echo $cart["productName"], "<br>"; ?>
+                                            <i><span style="color: gray;">"
+                                                    <?php echo $cart["productNote"]; ?>"
+                                                </span></i>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <?php
+                                            $price = ($cart["productQuantity"] * $cart["productPrice"]);
+                                            echo "RM", number_format((float) $price, 2), "<br>";
+                                            ?>
+                                        </div>
+                                    </div>
+                                    <?php
+                                endforeach; ?>
+                                <div class="row">
+                                    <hr>
+                                    <div class="col-md-9">
+                                        Subtotal:
+                                    </div>
+                                    <div class="col-md-3">
+                                        <b>
+                                            <?php echo "RM", number_format((float) $totalprice, 2); ?>
+                                        </b>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <input type="hidden" id="checkout" name="checkout" value="checkout"/>
+                                    <br><p class="center"><input type="submit" class="form-control btn btn-success" style="width: 80%;" value="Checkout"
+                                    <?php
+                                    if($counter <= 0) echo 'disabled';
+                                    ?>
+                                    /></p>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
         <!-- MAIN BODY ENDS -->
     </div>
+    <!-- Modal -->
+    <div class="modal fade" id="modifyModal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <form method="post" action="mycart.php">
+                    <div class="modal-body">
+                        <div class="input-group">
+                            <input type="hidden" id="cartId" name="cartId">
+                            <input type="hidden" id="productId" name="productId">
+                            <p>Amount: <input class="form-control" id="productQuantity" name="productQuantity"
+                                    type="number" value="1" min="1"></p>
+                            <p>Additional Note: <textarea class="form-control" id="productNote"
+                                    name="productNote"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-warning">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        $('#modifyModal').on('show.bs.modal', function (e) {
+            var $modal = $(this),
+                cartId = $(e.relatedTarget).data('cartid');
+            productId = $(e.relatedTarget).data('productid');
+            productName = $(e.relatedTarget).data('productname');
+            productQuantity = $(e.relatedTarget).data('productquantity');
+            productNote = $(e.relatedTarget).data('productnote');
+            $modal.find('.modal-title').html(productName);
+            $modal.find('#cartId').val(cartId);
+            $modal.find('#productId').val(productId);
+            $modal.find('#productQuantity').val(productQuantity);
+            $modal.find('#productNote').html(productNote);
+            console.log(productName);
+        });
+    </script>
 </body>
 
 </html>

@@ -23,7 +23,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
             $_SESSION['custId'] = $row['custId'];
             $_SESSION['username'] = $username;
             $_SESSION['loggedin'] = true;
-            $_SESSION['userlevel'] = "user";
+            $_SESSION['userlevel'] = "customer";
             header("location: home.php");
         } else {
             echo "<script> alert('Oops! Wrong Username & Password'); </script>";
@@ -63,7 +63,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                 <button class="btn btn-outline-dark me-2" type="submit">Login</button>
                 <footer>
                     Not a member? <a href="register.php">Register here</a><br>
-                    Other options: <a href="adminlogin.php">Admin Login</a>
+                    Other options: <a href="adminlogin.php">Admin Login</a>, <a href="runnerlogin.php">Runner Login</a>
                 </footer>
             </form>
         </div>

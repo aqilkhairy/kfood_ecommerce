@@ -61,7 +61,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                 <br>
                 <button class="btn btn-outline-dark me-2" type="submit">Login</button>
                 <footer>
-                    Other options: <a href="login.php">Customer Login</a>
+                    Other options: <a href="login.php">Customer Login</a>, <a href="runnerlogin.php">Runner Login</a>
                 </footer>
             </form>
         </div>

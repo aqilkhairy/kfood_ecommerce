@@ -17,6 +17,9 @@ body {
     margin: 2%;
 }
 
+.text-disabled {
+    color: gray;
+}
 
 input {
     width: 1000px;

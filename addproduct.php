@@ -40,22 +40,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 
 <body>
     <div class="main">
-        <!-- NAVBAR STARTS -->
-        <nav class="navbar navbar-expand-lg">
-            <div class="container-fluid">
-                <h4 class="navbar-brand">Oneul Korean Food</h4>
-                <nav class="navbar">
-                    <form class="container-fluid justify-content-start">
-
-                        <p class="navbar-text">Welcome
-                            <?php echo $_SESSION['username']; ?>,
-                            <a href="logout.php">Logout</a>
-                        </p>
-                    </form>
-                </nav>
-            </div>
-        </nav>
-        <!-- NAVBAR ENDS -->
+    <?php include('navbar.php'); ?>
         <!-- MAIN BODY STARTS -->
         <div class="container">
             <h1 class="center mt-5 mb-1">Add New Product</h1>
