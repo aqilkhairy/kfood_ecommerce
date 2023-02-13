@@ -48,20 +48,20 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 <body>
     <div class="main">
         <div class="center">
-            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+            <form class="form-group" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
                 <h1 class="center mt-5">Admin Login</h1>
                 <div>
                     <label for="username">Username:</label><br>
-                    <input type="text" name="username" id="username">
+                    <input class="form-control" type="text" name="username" id="username">
                 </div>
                 <div>
                     <label for="password">Password:</label><br>
-                    <input type="password" name="password" id="password">
+                    <input class="form-control" type="password" name="password" id="password">
                 </div>
                 <br>
-                <button class="btn btn-outline-dark me-2" type="submit">Login</button>
+                <button class="form-control btn btn-primary me-2" type="submit">Login</button>
                 <footer>
-                    Other options: <a href="login.php">Customer Login</a>, <a href="runnerlogin.php">Runner Login</a>
+                    <br>Other options: <a href="login.php">Customer Login</a>, <a href="runnerlogin.php">Runner Login</a>
                 </footer>
             </form>
         </div>

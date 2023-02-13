@@ -1,28 +1,29 @@
 body {
-    background-color: powderblue;
+    background-image: url('../images/background.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     padding: 20px;
 }
 
 .main {
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.774);
     border-radius: 5px;
     border-style: groove;
     border-color: gray;
-    position:fixed;
-    width:96%;
-    height:90%;
-    top:0px;
-    left:0px;
-    z-index:1000;
+    position: fixed;
+    width: 96%;
+    height: 90%;
+    top: 0px;
+    left: 0px;
+    z-index: 1000;
     margin: 2%;
+    overflow-y: scroll;
+    max-height: auto;
 }
 
 .text-disabled {
     color: gray;
-}
-
-input {
-    width: 1000px;
 }
 
 td {

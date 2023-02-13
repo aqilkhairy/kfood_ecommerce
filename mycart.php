@@ -18,7 +18,6 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
         if (updatecart($_POST) > 0) {
             echo "
                     <script>
-                        alert('Changes saved');
                         document.location.href = 'mycart.php';
                     </script>
                     ";
@@ -45,7 +44,6 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
         if (addorder($_POST) > 0) {
             echo "
                     <script>
-                        alert('Order received!');
                         document.location.href = 'mycart.php';
                     </script>
                     ";
@@ -133,7 +131,6 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                     </table>
                 </div>
                 <div class="col-md-5">
-                    <form method="post" action="mycart.php">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h3 class="panel-title">Order Summary</h3>
@@ -175,16 +172,17 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <input type="hidden" id="checkout" name="checkout" value="checkout"/>
-                                    <br><p class="center"><input type="submit" class="form-control btn btn-success" style="width: 80%;" value="Checkout"
-                                    <?php
+                                    <br><p class="center">
+                                    <button <?php
                                     if($counter <= 0) echo 'disabled';
-                                    ?>
-                                    /></p>
+                                    ?> style="width: 80%;" type="button" class="btn btn-warning" data-toggle="modal"
+                                        data-target="#checkoutModal">
+                                        Checkout
+                                    </button>
+                                    </p>
                                 </div>
                             </div>
                         </div>
-                    </form>
                 </div>
             </div>
         </div>
@@ -232,6 +230,30 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
             $modal.find('#productQuantity').val(productQuantity);
             $modal.find('#productNote').html(productNote);
             console.log(productName);
+        });
+    </script>
+
+    <!-- Modal -->
+    <div class="modal fade" id="checkoutModal" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-body">
+                    Order received, thank you.
+                    <form id="checkoutForm" action="mycart.php" method="POST">
+                        <input type="hidden" id="checkout" name="checkout">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $('#checkoutModal').on('hidden.bs.modal', function (e) {
+            var $modal = $(this);
+            $("#checkoutForm").submit();
         });
     </script>
 </body>

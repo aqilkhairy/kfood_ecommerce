@@ -12,7 +12,6 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
         if (addprod($_POST) > 0) {
             echo "
                     <script>
-                        alert('Succeeded');
                         document.location.href = 'home.php';
                     </script>
                     ";

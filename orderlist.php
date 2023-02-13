@@ -12,7 +12,6 @@ if (isset($_GET["modifyOrder"])) {
     if (modifyOrderStatus($id, $_GET["modifyOrder"]) > 0) {
         echo "
                 <script>
-                    alert('Succeeded');
                     document.location.href = 'orderlist.php';
                 </script>
                 ";

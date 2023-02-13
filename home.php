@@ -47,7 +47,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 </head>
 
 <body>
-    <div class="main">
+    <div class="main table-responsive ">
         <?php include('navbar.php'); ?>
         <!-- MAIN BODY STARTS -->
         <div class="container">
@@ -95,14 +95,22 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                         <?php if ($_SESSION['userlevel'] == 'admin') { ?>
                             <a href='editproduct.php?productId=<?php echo $prod["productId"]; ?>'
                                 class='btn btn-warning'>Edit</a>
-                            <a href='deleteproduct.php?productId=<?php echo $prod["productId"]; ?>'
-                                class='btn btn-danger'>Delete</a>
-                        <?php } else { ?>
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addToCartModal"
-                                data-productId="<?php echo $prod["productId"]; ?>"
-                                data-productName="<?php echo $prod["productName"]; ?>">
-                                Add to Cart
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal"
+                                data-productId="<?php echo $prod["productId"]; ?>">
+                                Delete
                             </button>
+                        <?php } else {
+                            if ($prod["productStock"] <= 0) { ?>
+                                <button type="button" class="btn btn-secondary" disabled>
+                                    OUT OF STOCK
+                                </button>
+                            <?php } else { ?>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addToCartModal"
+                                    data-productId="<?php echo $prod["productId"]; ?>"
+                                    data-productName="<?php echo $prod["productName"]; ?>">
+                                    Add to Cart
+                                </button>
+                            <?php } ?>
                         <?php } ?>
                     </td>
                 </tr>
@@ -148,6 +156,35 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
             console.log(productName);
         });
     </script>
+
+    <!-- Small modal -->
+    <div class="modal fade" tabindex="-1" role="dialog" id="deleteModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Cancel Confirmation</h4>
+                </div>
+                <div class="modal-body">
+                    Are you sure want to cancel this order?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                    <a href='deleteproduct.php' class='deleteButton btn btn-danger'>Yes, Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $('#deleteModal').on('show.bs.modal', function (e) {
+            var $modal = $(this),
+                productId = $(e.relatedTarget).data('productid');
+            var link = 'deleteproduct.php?productId=';
+            link += productId;
+            $modal.find(".deleteButton").attr("href", link);
+        });
+    </script>
+
 </body>
 
 </html>

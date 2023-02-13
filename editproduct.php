@@ -16,7 +16,6 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
         if (updateprod($_POST) > 0) {
             echo "
                     <script>
-                        alert('Succeeded');
                         document.location.href = 'home.php';
                     </script>
                     ";
@@ -49,16 +48,16 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
         <div class="container">
             <h1 class="center mt-5 mb-1">Edit Product</h1>
         </div>
-        <form action="" method="post" enctype="multipart/form-data">
+        <form class="form-group" style="margin-left: 20%;margin-right: 20%" action="" method="post" enctype="multipart/form-data">
             <input type="hidden" name="productId" value="<?= $product["productId"]; ?>">
             <input type="hidden" name="oldimg" value="<?= $product["productImage"]; ?>">
-            <table align="center">
+            <table class="table" align="center" >
                 <tr>
                     <td>
                         <label for="productName">Name : </label>
                     </td>
                     <td>
-                        <input type="text" name="productName" id="productName" required value="<?= $product["productName"]; ?>">
+                        <input class="form-control" type="text" name="productName" id="productName" required value="<?= $product["productName"]; ?>">
                     </td>
                 </tr>
                 <tr>
@@ -66,7 +65,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                         <label for="productStock">Stock : </label>
                     </td>
                     <td>
-                        <input type="number" name="productStock" id="productStock" min=1 required value="<?= $product["productStock"]; ?>">
+                        <input class="form-control" type="number" name="productStock" id="productStock" min=0 required value="<?= $product["productStock"]; ?>">
                     </td>
                 </tr>
                 <tr>
@@ -74,7 +73,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                         <label for="productPrice">Price : RM</label>
                     </td>
                     <td>
-                        <input type="number" name="productPrice" id="productPrice" min=0.00 step="0.01"  required value="<?= $product["productPrice"]; ?>">
+                        <input class="form-control" type="number" name="productPrice" id="productPrice" min=0.00 step="0.01"  required value="<?= $product["productPrice"]; ?>">
                     </td>
                 </tr>
                 <tr>
@@ -83,14 +82,14 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                     </td>
                     <td>
                         <img src="product_images/<?= $product["productImage"]; ?>" alt="" width="100"><br>
-                        <input type="file" name="imageprod" id="imageprod">
+                        <input class="form-control" type="file" name="imageprod" id="imageprod">
                     </td>
                 </tr>
             </table>
             <br>
-            <div align="center">
-                <button class="btn btn-success" type="submit" name="submit">Save</button>
-                <a class="btn btn-secondary" type="button" href="home.php" name="cancel">Cancel</a>
+            <div align="center" >
+                <button class="form-control btn btn-success" type="submit" name="submit">Save</button>
+                <a class="form-control btn btn-secondary" type="button" href="home.php" name="cancel">Cancel</a>
             </div>
         </form>
         <!-- MAIN BODY ENDS -->

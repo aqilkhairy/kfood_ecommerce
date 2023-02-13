@@ -16,7 +16,6 @@ if (isset($_GET["deleteOrder"])) {
     if (deleteOrder($id) > 0) { 
         echo "
                 <script>
-                    alert('Succeeded');
                     document.location.href = 'archivedOrder.php';
                 </script>
                 ";

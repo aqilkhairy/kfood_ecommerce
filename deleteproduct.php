@@ -11,7 +11,6 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     if (deleteprod($id) > 0) {
         echo "
             <script>
-                alert('Succeeded');
                 document.location.href = 'home.php';
             </script>
     ";

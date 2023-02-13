@@ -98,30 +98,31 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 <body>
     <div class="main">
         <div class="center">
-            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+            <form class="form-group"  action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
                 <h1 class="center mt-5">Sign Up</h1>
                 <div>
                     <label for="username">Username:</label><br>
-                    <input type="text" name="username" id="username">
+                    <input class="form-control" type="text" name="username" id="username">
                 </div>
                 <div>
                     <label for="password">Password:</label><br>
-                    <input type="password" name="password" id="password">
+                    <input class="form-control" type="password" name="password" id="password">
                 </div>
                 <div>
                     <label for="password2">Password Again:</label><br>
-                    <input type="password" name="password2" id="password2">
+                    <input class="form-control" type="password" name="password2" id="password2">
                 </div>
                 <div>
                     <label for="contact">Contact No.:</label><br>
-                    <input type="text" name="contact" id="contact">
+                    <input class="form-control" type="text" name="contact" id="contact">
                 </div>
                 <div>
                     <label for="address">Address:</label><br>
-                    <textarea name="address" id="address"></textarea>
+                    <textarea class="form-control" name="address" id="address"></textarea>
                 </div>
                 <br>
-                <button class="btn btn-outline-dark me-2" type="submit">Register</button>
+                <button class="form-control btn btn-warning me-2" type="submit">Register</button>
+                <br>
                 <footer>Already a member? <a href="login.php">Login here</a></footer>
             </form>
         </div>
