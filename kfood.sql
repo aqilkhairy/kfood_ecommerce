@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 23, 2023 at 01:08 PM
+-- Generation Time: Feb 13, 2023 at 03:55 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -51,7 +51,7 @@ CREATE TABLE `cart` (
   `productId` int(11) NOT NULL,
   `productQuantity` int(11) NOT NULL,
   `productNote` text DEFAULT NULL,
-  `orderId` int(11) NOT NULL,
+  `orderId` int(11) DEFAULT NULL,
   `custId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -69,6 +69,13 @@ CREATE TABLE `customer` (
   `custAddress` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `customer`
+--
+
+INSERT INTO `customer` (`custId`, `custUsername`, `custPass`, `custContact`, `custAddress`) VALUES
+(3, 'aqil787', '25f9e794323b453885f5181f1b624d0b', '0123456789', 'Home Address');
+
 -- --------------------------------------------------------
 
 --
@@ -78,7 +85,6 @@ CREATE TABLE `customer` (
 CREATE TABLE `order_table` (
   `orderId` int(11) NOT NULL,
   `orderCreatedDate` date NOT NULL DEFAULT current_timestamp(),
-  `orderDeliveryDate` date NOT NULL,
   `orderStatus` varchar(255) NOT NULL,
   `runnerId` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -97,6 +103,33 @@ CREATE TABLE `product` (
   `productImage` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `product`
+--
+
+INSERT INTO `product` (`productId`, `productName`, `productPrice`, `productStock`, `productImage`) VALUES
+(10, 'Jjajangmyeon', 10.9, 14, '63e9a3b4dafa3.png'),
+(11, 'Kimbap', 9.9, 20, '63e9a3c4e3c3c.png'),
+(12, 'Fried Kimbap', 10.9, 25, '63e98d5de6a3b.png'),
+(13, 'Bulgogi Bibimbap', 12, 20, '63e98d7244be7.png'),
+(14, 'Tteokboki', 8.9, 15, '63e98d8439a88.png'),
+(15, 'Dakmyeon', 10.9, 20, '63e98d9cbbb3d.png'),
+(16, 'Korean Chicken (6pcs)', 11.9, 15, '63e98dc314dc3.png'),
+(17, 'Mentai Rice', 14, 12, '63e98dd963f6e.png'),
+(18, 'Corndog', 6, 30, '63e98de754356.png'),
+(19, 'Gogimyeon', 8.9, 10, '63e98e196d1a7.png'),
+(20, 'Yanggugsu', 15.2, 12, '63e98e3a96d96.png'),
+(21, '100 Plus Drink', 2, 50, '63e98ed582bec.png'),
+(22, 'Coke', 2, 50, '63e98ee11e3f3.png'),
+(23, 'Blue Lagoon', 5, 50, '63e98eefe3cf0.png'),
+(24, 'Lime Soda', 5, 50, '63e98f185a501.png'),
+(25, 'Kiwi Sour', 5, 50, '63e98f2d108a3.png'),
+(26, 'Strawberry Soda', 5, 50, '63e98f54d7dfe.png'),
+(27, 'Original Uyu', 5, 35, '63e98f65f2a56.png'),
+(28, 'Banana Uyu', 5, 35, '63e98f71a1c94.png'),
+(29, 'Strawberry Uyu', 5, 40, '63e98f9110642.png'),
+(30, 'Chocolate Uyu', 5, 35, '63e98fa134207.png');
+
 -- --------------------------------------------------------
 
 --
@@ -108,6 +141,13 @@ CREATE TABLE `runner` (
   `runnerUsername` varchar(255) NOT NULL,
   `runnerPass` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `runner`
+--
+
+INSERT INTO `runner` (`runnerId`, `runnerUsername`, `runnerPass`) VALUES
+(1, 'Muhammad Runner', 'e10adc3949ba59abbe56e057f20f883e');
 
 --
 -- Indexes for dumped tables
@@ -167,31 +207,31 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `cartId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `cartId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `customer`
 --
 ALTER TABLE `customer`
-  MODIFY `custId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `custId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `order_table`
 --
 ALTER TABLE `order_table`
-  MODIFY `orderId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `orderId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `productId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `productId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `runner`
 --
 ALTER TABLE `runner`
-  MODIFY `runnerId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `runnerId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Constraints for dumped tables
