@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 13, 2023 at 03:55 AM
+-- Generation Time: Feb 13, 2023 at 03:58 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -68,13 +68,6 @@ CREATE TABLE `customer` (
   `custContact` varchar(255) NOT NULL,
   `custAddress` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `customer`
---
-
-INSERT INTO `customer` (`custId`, `custUsername`, `custPass`, `custContact`, `custAddress`) VALUES
-(3, 'aqil787', '25f9e794323b453885f5181f1b624d0b', '0123456789', 'Home Address');
 
 -- --------------------------------------------------------
 
@@ -141,13 +134,6 @@ CREATE TABLE `runner` (
   `runnerUsername` varchar(255) NOT NULL,
   `runnerPass` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `runner`
---
-
-INSERT INTO `runner` (`runnerId`, `runnerUsername`, `runnerPass`) VALUES
-(1, 'Muhammad Runner', 'e10adc3949ba59abbe56e057f20f883e');
 
 --
 -- Indexes for dumped tables
