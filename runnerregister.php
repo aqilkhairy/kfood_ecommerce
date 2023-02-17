@@ -25,8 +25,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                         $username = trim($_POST["username"]);
                     }
                 } else {
-                    echo "<script> 
-                alert('Oops! Something went wrong. Please try again later.');  </script>";
+                    echoSwal("Database query failed", "");
                 }
             }
             mysqli_stmt_close($stmt);
@@ -59,24 +58,19 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                 $param_password = md5($password);
 
                 if (mysqli_stmt_execute($stmt)) {
-                    print('tet');
-                    echo "
-                <script> 
-                    alert('Registration is successful!');
-                    document.location.href = 'runnerlogin.php'; 
-                </script>";
+                    echoSwal("Registration success.", "document.location.href = 'login.php';");
                 } else {
-                    echo "<script>alert('Something went wrong. Please try again later.');</script>";
+                    echoSwal("Database query failed", "");
                 }
             }
             mysqli_stmt_close($stmt);
         } else {
-            echo "<script>alert('Please fill all the field correctly.');</script>";
+            echoSwal("Please fill all the field correctly.", "");
         }
         mysqli_close($conn);
     }
 } else {
-    echo "<script> alert('You have already logged in.'); document.location.href = 'home.php'; </script>";
+    echoSwal("You have already logged in.", "document.location.href = 'home.php';");
 }
 
 

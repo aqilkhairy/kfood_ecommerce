@@ -4,7 +4,7 @@ require 'fx.php';
 session_start();
 
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
-    echo "<script>alert('Please login first.');  document.location.href = 'login.php'; </script>";
+    echoSwal("Please login first.", "document.location.href = 'login.php';");
     exit;
 } else {
     $getQuery = "SELECT * FROM product";
@@ -18,19 +18,9 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     if (isset($_POST["productId"])) {
         $_POST["custId"] = $_SESSION["custId"];
         if (addcart($_POST) > 0) {
-            echo "
-                    <script>
-                        alert('Added to cart');
-                        document.location.href = 'home.php';
-                    </script>
-                    ";
+            echoSwal("Added to cart.", "document.location.href = 'home.php';");
         } else {
-            echo "
-                    <script>
-                        alert('Something wrong');
-                        document.location.href = 'home.php';
-                    </script>
-                    ";
+            echoSwal("Database query failed.", "document.location.href = 'home.php';");
         }
     }
 }
@@ -163,10 +153,10 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Cancel Confirmation</h4>
+                    <h4 class="modal-title">Delete Confirmation</h4>
                 </div>
                 <div class="modal-body">
-                    Are you sure want to cancel this order?
+                    Are you sure want to delete this product?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">No</button>

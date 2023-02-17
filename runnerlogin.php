@@ -26,13 +26,13 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
             $_SESSION['userlevel'] = "runner";
             header("location: orderlist.php");
         } else {
-            echo "<script> alert('Oops! Wrong Username & Password'); </script>";
+            echoSwal("Wrong username/password", "");
         }
 
         mysqli_close($conn);
     }
 } else {
-    echo "<script> alert('You have already logged in.');  document.location.href = 'orderlist.php'; </script>";
+    echoSwal("You have already logged in.", "document.location.href = 'orderlist.php';");
 }
 ?>
 

@@ -25,8 +25,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                         $username = trim($_POST["username"]);
                     }
                 } else {
-                    echo "<script> 
-                alert('Oops! Something went wrong. Please try again later.');  </script>";
+                    echoSwal("Database query failed", "");
                 }
             }
             mysqli_stmt_close($stmt);
@@ -46,7 +45,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
         } else {
             $confirm_password = trim($_POST["password2"]);
             if (empty($password_err) && ($password != $confirm_password)) {
-                $confirm_password_err = "Password did not match.";
+                $confirm_password_err = "Confirm password did not match.";
             }
         }
 
@@ -62,24 +61,29 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 
 
                 if (mysqli_stmt_execute($stmt)) {
-                    print('tet');
-                    echo "
-                <script> 
-                    alert('Registration is successful!');
-                    document.location.href = 'login.php'; 
-                </script>";
+                    echoSwal("Registration success.", "document.location.href = 'login.php';");
                 } else {
-                    echo "<script>alert('Something went wrong. Please try again later.');</script>";
+                    echoSwal("Database query failed", "");
                 }
             }
             mysqli_stmt_close($stmt);
         } else {
-            echo "<script>alert('Please fill all the field correctly.');</script>";
+            $err_string = "";
+            if (!empty($username_err)) {
+                $err_string .= $username_err . "\\n";
+            }
+            if (!empty($password_err)) {
+                $err_string .= $password_err . "\\n";
+            }
+            if (!empty($confirm_password_err)) {
+                $err_string .= $confirm_password_err . "\\n";
+            }
+            echoSwal($err_string, "");
         }
         mysqli_close($conn);
     }
 } else {
-    echo "<script> alert('You have already logged in.'); document.location.href = 'home.php'; </script>";
+    echoSwal("You have already logged in", "document.location.href = 'home.php';");
 }
 
 
@@ -94,7 +98,6 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
     ?>
     <title>Register</title>
 </head>
-
 <body>
     <div class="main">
         <div class="center">

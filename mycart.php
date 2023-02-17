@@ -4,16 +4,17 @@ require 'fx.php';
 session_start();
 
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
-    echo "<script>alert('Please login first.');  document.location.href = 'login.php'; </script>";
+    echoSwal("Please login first.", "document.location.href = 'login.php';");
     exit;
 } else {
-    $getQuery = "SELECT * FROM cart c JOIN customer b ON (c.custId = b.custId) JOIN product p ON (c.productId = p.productId) WHERE c.orderId IS NULL";
+    $custId = $_SESSION["custId"];
+    $getQuery = "SELECT * FROM cart c JOIN customer b ON (c.custId = b.custId) JOIN product p ON (c.productId = p.productId) WHERE c.orderId IS NULL AND c.custId = $custId";
     $mycart = query($getQuery);
     if ($_SESSION["userlevel"] == "runner") {
         echo "<script>document.location.href = 'runnerhome.php';</script>";
     }
 
-    if (isset($_POST["cartId"])) {
+    if (isset($_POST["modifyCart"])) {
         $_POST["custId"] = $_SESSION["custId"];
         if (updatecart($_POST) > 0) {
             echo "
@@ -22,12 +23,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                     </script>
                     ";
         } else {
-            echo "
-                    <script>
-                        alert('Something wrong');
-                        document.location.href = 'mycart.php';
-                    </script>
-                    ";
+            echoSwal("Database query failed", "document.location.href = 'mycart.php';");
         }
     }
     if(isset($_POST["checkout"])) {
@@ -48,12 +44,18 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                     </script>
                     ";
         } else {
+            echoSwal("Database query failed", "document.location.href = 'mycart.php';");
+        }
+    }
+    if (isset($_POST["removeCart"])) {
+        if (deleteCart($_POST["cartId"]) > 0) {
             echo "
                     <script>
-                        alert('Something wrong');
                         document.location.href = 'mycart.php';
                     </script>
                     ";
+        } else {
+            echoSwal("Database query failed", "document.location.href = 'mycart.php';");
         }
     }
 }
@@ -123,6 +125,10 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                                         data-productQuantity="<?php echo $cart["productQuantity"]; ?>"
                                         data-productNote="<?php echo $cart["productNote"]; ?>">
                                         Modify
+                                    </button>
+                                    <button type="button" class="btn btn-danger" data-toggle="modal"
+                                        data-target="#removeModal" data-cartId="<?php echo $cart["cartId"]; ?>">
+                                        Remove
                                     </button>
                                 </td>
                             </tr>
@@ -200,6 +206,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                 <form method="post" action="mycart.php">
                     <div class="modal-body">
                         <div class="input-group">
+                            <input type="hidden" id="modifyCart" name="modifyCart">
                             <input type="hidden" id="cartId" name="cartId">
                             <input type="hidden" id="productId" name="productId">
                             <p>Amount: <input class="form-control" id="productQuantity" name="productQuantity"
@@ -254,6 +261,36 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
         $('#checkoutModal').on('hidden.bs.modal', function (e) {
             var $modal = $(this);
             $("#checkoutForm").submit();
+        });
+    </script>
+
+    <!-- Small modal -->
+    <div class="modal fade" tabindex="-1" role="dialog" id="removeModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Remove Confirmation</h4>
+                </div>
+                <div class="modal-body">
+                    Are you sure want to remove this item from cart?
+                </div>
+                <div class="modal-footer">
+                    <form method="post" action="mycart.php">
+                        <input type="hidden" id="removeCart" name="removeCart">
+                        <input type="hidden" id="cartId" name="cartId">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                        <input class='btn btn-danger' type="submit" value="Yes, Remove">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $('#removeModal').on('show.bs.modal', function (e) {
+            var $modal = $(this),
+                cartId = $(e.relatedTarget).data('cartid');
+            $modal.find('#cartId').val(cartId);
         });
     </script>
 </body>

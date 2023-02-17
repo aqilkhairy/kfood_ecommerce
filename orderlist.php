@@ -4,7 +4,7 @@ require 'fx.php';
 session_start();
 
 if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
-    echo "<script>alert('Please login first.');  document.location.href = 'login.php'; </script>";
+    echoSwal("Please login first.", "document.location.href = 'login.php';");
     exit;
 }
 if (isset($_GET["modifyOrder"])) {
@@ -16,31 +16,16 @@ if (isset($_GET["modifyOrder"])) {
                 </script>
                 ";
     } else {
-        echo "
-                <script>
-                    alert('Something wrong');
-                    document.location.href = 'orderlist.php';
-                </script>
-                ";
+        echoSwal("Database query failed", "document.location.href = 'orderlist.php';");
     }
 }
 if (isset($_GET["chooseRunner"])) {
     $orderId = $_GET["orderId"];
     $runnerId = $_GET["runnerId"];
     if (chooseRunner($orderId, $runnerId) > 0) {
-        echo "
-                <script>
-                    alert('Succeeded');
-                    document.location.href = 'orderlist.php';
-                </script>
-                ";
+        echoSwal("Runner chosen.", "document.location.href = 'orderlist.php';");
     } else {
-        echo "
-                <script>
-                    alert('Something wrong');
-                    document.location.href = 'orderlist.php';
-                </script>
-                ";
+        echoSwal("Database query failed", "document.location.href = 'orderlist.php';");
     }
 }
 ?>

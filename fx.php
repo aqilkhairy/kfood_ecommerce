@@ -5,6 +5,18 @@ if ($conn === false) {
     die("ERROR: Could not connect. " . mysqli_connect_error());
 }
 
+function echoSwal($message, $then) {
+    echo "<script>
+            document.onreadystatechange = function () {
+                if (document.readyState == \"complete\") {
+                    swal('$message').then((value) => {
+                            $then
+                        });
+              }
+            }
+            </script>";
+}
+
 function query($query)
 {
     global $conn;
@@ -107,6 +119,15 @@ function updatecart($data)
     return mysqli_affected_rows($conn);
 }
 
+function deleteCart($id)
+{
+    global $conn;
+
+    mysqli_query($conn, "DELETE FROM cart WHERE cartId = $id");
+
+    return mysqli_affected_rows($conn);
+}
+
 function modifyOrderStatus($orderId, $status)
 {
     global $conn;
@@ -158,7 +179,7 @@ function upload()
     $filetmpname = $_FILES['imageprod']['tmp_name'];
 
     if ($error === 4) {
-        echo "<script> alert('Image not Uploaded'); </script>";
+        echoSwal("Image not supported.", "");
 
         return false;
     }
@@ -168,13 +189,13 @@ function upload()
     $fileextension = strtolower(end($fileextension));
 
     if (!in_array($fileextension, $fileextensionallowed)) {
-        echo "<script> alert('Not a image file Uploaded'); </script>";
+        echoSwal("Image not supported.", "");
 
         return false;
     }
 
     if ($filesize > 5000000) {
-        echo "<script> alert('Image file too big'); </script>";
+        echoSwal("Image file too big.", "");
 
         return false;
     }
