@@ -1,4 +1,6 @@
 
+<link rel="icon" href="dist/images/favicon.ico" type="image/ico">
+
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <link href="dist/css/style.css" rel="stylesheet">
 

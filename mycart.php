@@ -85,7 +85,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                                 <th>#</th>
                                 <th>Product Details</th>
                                 <th>Quantity</th>
-                                <th>Total Price</th>
+                                <th>Price Each</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -103,9 +103,11 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                                 </td>
                                 <td>
                                     <?php echo $cart["productName"], "<br>"; ?>
-                                    <i><span style="color: gray;">"
-                                            <?php echo $cart["productNote"]; ?>"
+                                    <?php if($cart["productNote"] != "") { ?>
+                                        <i><span style="color: gray;">"
+                                            <?php echo $cart["productNote"]; ?> "
                                         </span></i>
+                                    <?php } ?>
                                 </td>
                                 <td>
                                     <?php echo $cart["productQuantity"], "<br>"; ?>
@@ -114,7 +116,7 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                                     <?php
                                     $price = ($cart["productQuantity"] * $cart["productPrice"]);
                                     $totalprice += $price;
-                                    echo "RM", number_format((float) $price, 2), "<br>";
+                                    echo "RM", number_format((float) $cart["productPrice"], 2), "<br>";
                                     ?>
                                 </td>
                                 <td>
@@ -142,6 +144,18 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                                 <h3 class="panel-title">Order Summary</h3>
                             </div>
                             <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <b>Quantity</b>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <b>Product</b>
+                                    </div>
+                                    <div class="col-md-3" style="padding-right: 20px; display: flex; justify-content: flex-end">
+                                        <b>Total Price</b>
+                                    </div>
+                                </div>
+                                <hr>
                                 <?php 
                                 foreach ($mycart as $cart):
                                     ?>
@@ -153,14 +167,16 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                                         </div>
                                         <div class="col-md-7">
                                             <?php echo $cart["productName"], "<br>"; ?>
-                                            <i><span style="color: gray;">"
-                                                    <?php echo $cart["productNote"]; ?>"
+                                            <?php if($cart["productNote"] != "") { ?>
+                                                <i><span style="color: gray;">"
+                                                    <?php echo $cart["productNote"]; ?> "
                                                 </span></i>
+                                            <?php } ?>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-3" style="padding-right: 20px; display: flex; justify-content: flex-end">
                                             <?php
                                             $price = ($cart["productQuantity"] * $cart["productPrice"]);
-                                            echo "RM", number_format((float) $price, 2), "<br>";
+                                            echo "", number_format((float) $price, 2), "<br>";
                                             ?>
                                         </div>
                                     </div>
@@ -171,10 +187,26 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                                     <div class="col-md-9">
                                         Subtotal:
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-3" style="padding-right: 20px; display: flex; justify-content: flex-end">
                                         <b>
                                             <?php echo "RM", number_format((float) $totalprice, 2); ?>
                                         </b>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <hr>
+                                    <div class="col-md-4">
+                                        Payment Type:
+                                    </div>
+                                    <div class="col-md-8" style="padding-right: 20px; display: flex; justify-content: flex-end">
+                                        Cash on Delivery &nbsp;&nbsp;<input type="radio" value="Cash on Delivery" checked/> 
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                    </div>
+                                    <div class="col-md-8" style="padding-right: 20px; display: flex; justify-content: flex-end">
+                                        Online Payment (not available for now) &nbsp;&nbsp;<input type="radio" value="Online Payment (not available for now)" disabled/> 
                                     </div>
                                 </div>
                                 <div class="row">
