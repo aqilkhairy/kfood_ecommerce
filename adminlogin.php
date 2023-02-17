@@ -47,23 +47,30 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 
 <body>
     <div class="main">
-        <div class="center">
-            <form class="form-group" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-                <h1 class="center mt-5">Admin Login</h1>
-                <div>
-                    <label for="username">Username:</label><br>
-                    <input class="form-control" type="text" name="username" id="username">
+        <div class="container">
+            <div class="row">
+                <div class="col-6 center">
+                    <img class="center-image" src="dist/images/logo.png" width="200"/>
                 </div>
-                <div>
-                    <label for="password">Password:</label><br>
-                    <input class="form-control" type="password" name="password" id="password">
+                <div class="col-6 center">
+                    <form class="form-group" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+                        <h1 class="center mt-5">Admin Login</h1>
+                        <div>
+                            <label for="username">Username:</label><br>
+                            <input class="form-control" type="text" name="username" id="username">
+                        </div>
+                        <div>
+                            <label for="password">Password:</label><br>
+                            <input class="form-control" type="password" name="password" id="password">
+                        </div>
+                        <br>
+                        <button class="form-control btn btn-primary me-2" type="submit">Login</button>
+                        <footer>
+                            <br>Other options: <a href="login.php">Customer Login</a>, <a href="runnerlogin.php">Runner Login</a>
+                        </footer>
+                    </form>
                 </div>
-                <br>
-                <button class="form-control btn btn-primary me-2" type="submit">Login</button>
-                <footer>
-                    <br>Other options: <a href="login.php">Customer Login</a>, <a href="runnerlogin.php">Runner Login</a>
-                </footer>
-            </form>
+            </div>
         </div>
     </div>
 </body>

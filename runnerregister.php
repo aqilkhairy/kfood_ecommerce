@@ -65,7 +65,17 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
             }
             mysqli_stmt_close($stmt);
         } else {
-            echoSwal("Please fill all the field correctly.", "");
+            $err_string = "";
+            if (!empty($username_err)) {
+                $err_string .= $username_err . "\\n";
+            }
+            if (!empty($password_err)) {
+                $err_string .= $password_err . "\\n";
+            }
+            if (!empty($confirm_password_err)) {
+                $err_string .= $confirm_password_err . "\\n";
+            }
+            echoSwal($err_string, "");
         }
         mysqli_close($conn);
     }
@@ -88,26 +98,33 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 
 <body>
     <div class="main">
-        <div class="center">
-            <form class="form-group"  action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-                <h1 class="center mt-5">Runner Sign Up</h1>
-                <div>
-                    <label for="username">Username:</label><br>
-                    <input class="form-control" type="text" name="username" id="username">
+        <div class="container">
+            <div class="row">
+                <div class="col-6 center">
+                    <img class="center-image" src="dist/images/logo.png" width="200"/>
                 </div>
-                <div>
-                    <label for="password">Password:</label><br>
-                    <input class="form-control" type="password" name="password" id="password">
+                <div class="col-6 center">
+                    <form class="form-group"  action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+                        <h1 class="center mt-5">Runner Sign Up</h1>
+                        <div>
+                            <label for="username">Username:</label><br>
+                            <input class="form-control" type="text" name="username" id="username">
+                        </div>
+                        <div>
+                            <label for="password">Password:</label><br>
+                            <input class="form-control" type="password" name="password" id="password">
+                        </div>
+                        <div>
+                            <label for="password2">Password Again:</label><br>
+                            <input class="form-control" type="password" name="password2" id="password2">
+                        </div>
+                        <br>
+                        <button class="form-control btn btn-warning me-2" type="submit">Register</button>
+                        <br>
+                        <footer>Already a runner? <a href="runnerlogin.php">Login here</a></footer>
+                    </form>
                 </div>
-                <div>
-                    <label for="password2">Password Again:</label><br>
-                    <input class="form-control" type="password" name="password2" id="password2">
-                </div>
-                <br>
-                <button class="form-control btn btn-warning me-2" type="submit">Register</button>
-                <br>
-                <footer>Already a runner? <a href="runnerlogin.php">Login here</a></footer>
-            </form>
+            </div>
         </div>
     </div>
 </body>

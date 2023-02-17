@@ -126,7 +126,11 @@ if (isset($_GET["chooseRunner"])) {
                         $cart = query($getQuery);
                         foreach ($cart as $c) {
                             $total += ($c["productPrice"] * $c["productQuantity"]);
-                            echo $c["productQuantity"], 'x ', $c["productName"], ' (<i style=\'color: gray;\'>', $c["productNote"], '</i>)<br>';
+                            $note = "<br>";
+                            if($c["productNote"] != "") {
+                                $note = ' (<i style=\'color: gray;\'> '.$c["productNote"].' </i>)<br>';
+                            }
+                            echo $c["productQuantity"], 'x ', $c["productName"], $note;
                         }
                         ?>
                     </td>
@@ -168,6 +172,19 @@ if (isset($_GET["chooseRunner"])) {
                             echo "<span class='label label-info'>$status</span>";
                         } else if ($status == 'ON DELIVERY') {
                             echo "<span class='label label-warning'>$status</span>";
+                        } else if ($status == 'WAITING CUSTOMER CONFIRMATION') {
+                            if($_SESSION['userlevel'] == 'customer') {
+                                echo "Runner has delivered the order! 
+                                <br>Please click the button below for confirmation:
+                                <br>
+                                <button type=\"button\" class=\"form-control btn btn-success\" data-toggle=\"modal\" data-target=\"#custDeliveredModal\"
+                                        data-orderId=\"$orderId\">
+                                    Confirm delivered
+                                </button>
+                                ";
+                            } else {
+                                echo "<span class='label label-warning'>$status</span>";
+                            }
                         } else if ($status == 'COMPLETED') {
                             echo "<span class='label label-success'>$status</span>";
                         } else if ($status == 'CANCELED') {
@@ -233,7 +250,26 @@ if (isset($_GET["chooseRunner"])) {
                     <h4 class="modal-title">Delivered Confirmation</h4>
                 </div>
                 <div class="modal-body">
-                    Are you sure want the item has been delivered?
+                    Are you sure you have delivered the order?
+                    Note: Customer will have to confirm the order after this
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                    <a href='orderlist.php' class='yesButton btn btn-success'>Yes</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Small modal -->
+    <div class="modal fade" tabindex="-1" role="dialog" id="custDeliveredModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Delivered Confirmation</h4>
+                </div>
+                <div class="modal-body">
+                    Are you sure you have received the order?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
@@ -251,6 +287,13 @@ if (isset($_GET["chooseRunner"])) {
             $modal.find(".cancelButton").attr("href", link);
         });
         $('#deliveredModal').on('show.bs.modal', function (e) {
+            var $modal = $(this),
+                orderId = $(e.relatedTarget).data('orderid');
+            var link = 'orderlist.php?modifyOrder=WAITING CUSTOMER CONFIRMATION&orderId=';
+            link += orderId;
+            $modal.find(".yesButton").attr("href", link);
+        });
+        $('#custDeliveredModal').on('show.bs.modal', function (e) {
             var $modal = $(this),
                 orderId = $(e.relatedTarget).data('orderid');
             var link = 'orderlist.php?modifyOrder=COMPLETED&orderId=';

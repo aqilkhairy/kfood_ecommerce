@@ -100,34 +100,41 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 </head>
 <body>
     <div class="main">
-        <div class="center">
-            <form class="form-group"  action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-                <h1 class="center mt-5">Sign Up</h1>
-                <div>
-                    <label for="username">Username:</label><br>
-                    <input class="form-control" type="text" name="username" id="username">
+        <div class="container">
+            <div class="row">
+                <div class="col-6 center">
+                    <img class="center-image" src="dist/images/logo.png" width="200"/>
                 </div>
-                <div>
-                    <label for="password">Password:</label><br>
-                    <input class="form-control" type="password" name="password" id="password">
+                <div class="col-6" style="padding-right: 20%; padding-left: 20%;">
+                    <form class="form-group"  action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+                        <h1 class="center mt-5">Sign Up</h1>
+                        <div>
+                            <label for="username">Username:</label><br>
+                            <input class="form-control" type="text" name="username" id="username">
+                        </div>
+                        <div>
+                            <label for="password">Password:</label><br>
+                            <input class="form-control" type="password" name="password" id="password">
+                        </div>
+                        <div>
+                            <label for="password2">Password Again:</label><br>
+                            <input class="form-control" type="password" name="password2" id="password2">
+                        </div>
+                        <div>
+                            <label for="contact">Contact No.:</label><br>
+                            <input class="form-control" type="text" name="contact" id="contact">
+                        </div>
+                        <div>
+                            <label for="address">Address:</label><br>
+                            <textarea class="form-control" name="address" id="address"></textarea>
+                        </div>
+                        <br>
+                        <button class="form-control btn btn-warning me-2" type="submit">Register</button>
+                        <br>
+                        <footer>Already a member? <a href="login.php">Login here</a></footer>
+                    </form>
                 </div>
-                <div>
-                    <label for="password2">Password Again:</label><br>
-                    <input class="form-control" type="password" name="password2" id="password2">
-                </div>
-                <div>
-                    <label for="contact">Contact No.:</label><br>
-                    <input class="form-control" type="text" name="contact" id="contact">
-                </div>
-                <div>
-                    <label for="address">Address:</label><br>
-                    <textarea class="form-control" name="address" id="address"></textarea>
-                </div>
-                <br>
-                <button class="form-control btn btn-warning me-2" type="submit">Register</button>
-                <br>
-                <footer>Already a member? <a href="login.php">Login here</a></footer>
-            </form>
+            </div>
         </div>
     </div>
 </body>
