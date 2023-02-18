@@ -38,11 +38,15 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
         endforeach;
         $_POST['cartArray'] = $cartArray;
         if (addorder($_POST) > 0) {
-            echo "
-                    <script>
-                        document.location.href = 'mycart.php';
-                    </script>
-                    ";
+            $paymentType = $_POST['payment'];
+            if($paymentType == 'Online Banking') {
+                echoSwalType("Payment Successful!", "success", "
+                swal('Order placed. Thank you for your order.').then((value) => {
+                    document.location.href = 'mycart.php';
+                });");
+            } else {
+                echoSwal("$paymentType Order placed! Thank you for your order.", "document.location.href = 'mycart.php';");
+            }
         } else {
             echoSwal("Database query failed", "document.location.href = 'mycart.php';");
         }
@@ -194,22 +198,6 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <hr>
-                                    <div class="col-md-4">
-                                        Payment Type:
-                                    </div>
-                                    <div class="col-md-8" style="padding-right: 20px; display: flex; justify-content: flex-end">
-                                        Cash on Delivery &nbsp;&nbsp;<input type="radio" value="Cash on Delivery" checked/> 
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                    </div>
-                                    <div class="col-md-8" style="padding-right: 20px; display: flex; justify-content: flex-end">
-                                        Online Payment (not available for now) &nbsp;&nbsp;<input type="radio" value="Online Payment (not available for now)" disabled/> 
-                                    </div>
-                                </div>
-                                <div class="row">
                                     <br><p class="center">
                                     <button <?php
                                     if($counter <= 0) echo 'disabled';
@@ -277,24 +265,28 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
         <div class="modal-dialog modal-sm">
             <!-- Modal content-->
             <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Choose Payment Method</h4>
+                </div>
+                <form id="checkoutForm" action="mycart.php" method="POST">
                 <div class="modal-body">
-                    Order received, thank you.
-                    <form id="checkoutForm" action="mycart.php" method="POST">
+                        Payment Method:
+                        <br><input type="radio" id="payment" name="payment" value="Cash on Delivery" checked/>&nbsp; Cash on Delivery
+                        <br><input type="radio" id="payment" name="payment" value="Online Banking"/>&nbsp; Online Banking
+                    
                         <input type="hidden" id="checkout" name="checkout">
-                    </form>
+                        <input type="hidden" id="paymentType" name="paymentType">
+                    
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-warning">Proceed</button>
                 </div>
+                </form>
             </div>
         </div>
     </div>
-    <script>
-        $('#checkoutModal').on('hidden.bs.modal', function (e) {
-            var $modal = $(this);
-            $("#checkoutForm").submit();
-        });
-    </script>
 
     <!-- Small modal -->
     <div class="modal fade" tabindex="-1" role="dialog" id="removeModal">
