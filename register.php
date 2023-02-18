@@ -100,11 +100,9 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 </head>
 <body>
     <div class="main">
+    <?php include('navbar.php'); ?>
         <div class="container">
             <div class="row">
-                <div class="col-6 center">
-                    <img class="center-image" src="dist/images/logo.png" width="200"/>
-                </div>
                 <div class="col-6" style="padding-right: 20%; padding-left: 20%;">
                     <form class="form-group"  action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
                         <h1 class="center mt-5">Sign Up</h1>
