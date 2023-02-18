@@ -17,6 +17,30 @@ function echoSwal($message, $then) {
             </script>";
 }
 
+function echoSwalJS($message, $then) {
+    echo "
+            document.onreadystatechange = function () {
+                if (document.readyState == \"complete\") {
+                    swal('$message').then((value) => {
+                            $then
+                        });
+              }
+            }
+            ";
+}
+
+function echoSwalType($message, $type, $then) {
+    echo "<script>
+            document.onreadystatechange = function () {
+                if (document.readyState == \"complete\") {
+                    swal( '$message', '', '$type' ).then((value) => {
+                            $then
+                        });
+              }
+            }
+            </script>";
+}
+
 function query($query)
 {
     global $conn;
